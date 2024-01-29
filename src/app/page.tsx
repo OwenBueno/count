@@ -73,7 +73,7 @@ export default function Home() {
         Reset
       </ResetButton>
       <DivTotal>
-        <div style={{font: '18px'}}>Total Count: {totalCount}</div>
+        <div style={{font: '18px', color: 'black'}}>Total Count: {totalCount}</div>
       </DivTotal>
     </main>
   );
