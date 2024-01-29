@@ -7,10 +7,11 @@ import { common } from '@mui/material/colors';
 export default function Home() {
   const [initialRender, setInitialRender] = useState(true);
   const [count, setCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: common.black,
-    fontSize: '12px',
+    fontSize: '20px',
     width: '100%',
     height: '100vh',
     backgroundColor: common.white,
@@ -25,25 +26,39 @@ export default function Home() {
     right: '16px',
   });
 
+  const DivTotal = styled('div')({
+    position: 'fixed',
+    bottom: '16px',
+    left: '16px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  });
+
   const handleResetClick = () => {
     setCount(0);
     window.localStorage.setItem('count', `0`);
   };
 
   const handleButtonClick = () => {
-    // Delay the update of the count by 1000 milliseconds (1 second)
     setTimeout(() => {
-
-      setCount((prevCount) => prevCount + 1);
-      window.localStorage.setItem('count', `${count+1}`);
+      const newCount = count + 1;
+      setCount(newCount);
+      setTotalCount((prevTotalCount) => prevTotalCount + 1);
+      window.localStorage.setItem('count', `${newCount}`);
+      window.localStorage.setItem('totalCount', `${totalCount + 1}`);
     }, 300);
   };
 
   useEffect(() => {
-    if(initialRender){
-      const count = window.localStorage.getItem('count')
-      if(count){
-        setCount(parseInt(count) ?? 0);
+    if (initialRender) {
+      const storedCount = window.localStorage.getItem('count');
+      const storedTotalCount = window.localStorage.getItem('totalCount');
+      if (storedCount) {
+        setCount(parseInt(storedCount, 10) || 0);
+      }
+      if (storedTotalCount) {
+      setTotalCount(parseInt(storedTotalCount, 10) || 0);
       }
       setInitialRender(false);
     }
@@ -52,11 +67,14 @@ export default function Home() {
   return (
     <main className="">
       <ColorButton id='button' variant="contained" onClick={handleButtonClick}>
-      {count === 0 ? 'Click Here' : `${count}`}
+        {count === 0 ? 'Click Here' : `${count}`}
       </ColorButton>
       <ResetButton variant="outlined" onClick={handleResetClick}>
         Reset
       </ResetButton>
+      <DivTotal>
+        <div style={{font: '18px'}}>Total Count: {totalCount}</div>
+      </DivTotal>
     </main>
   );
 }
